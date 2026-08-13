@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KhmerKitchen | Modern Royal Cambodian Dining</title>
+    <!-- Tailwind CSS CDN for Ultra-Modern Design System -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                        },
+                        darkBg: '#0f172a',
+                        cardDark: '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome & Inter Font -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 min-h-screen selection:bg-emerald-500 selection:text-white">
+
+    <!-- Modern Glassmorphism Navbar -->
+    <header class="glass-nav sticky top-0 z-50 border-b border-slate-800 px-6 py-4 flex justify-between items-center transition-all">
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="goToHomePage()">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-bowl-food text-lg"></i>
+            </div>
+            <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">KhmerKitchen</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="showToast('⚡ Flash Promo Active: 20% OFF today on all Royal Khmer Selections!')" class="hidden sm:flex items-center gap-2 text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3.5 py-2 rounded-full hover:bg-emerald-500/20 transition-all">
+                <i class="fa-solid fa-bolt"></i> Today's Specials
+            </button>
+        </div>
+    </header>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3"></div>
+
+    <!-- HOME PAGE VIEW -->
+    <div id="homePage" class="page-view max-w-7xl mx-auto px-4 sm:px-6 py-8 transition-opacity duration-300">
+        <!-- Hero Banner -->
+        <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 p-8 sm:p-12 mb-10 border border-emerald-500/20 shadow-2xl shadow-emerald-950/50">
+            <div class="relative z-10 max-w-2xl">
+                <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950 mb-4 shadow-lg shadow-amber-400/20">
+                    <i class="fa-solid fa-percent"></i> Special Daily Discount
+                </span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight mb-4 leading-tight text-white">Authentic Cambodian Royal Flavors</h1>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">Experience freshly prepared Khmer delicacies crafted by master chefs using traditional spices, aromatic kroeung, and fresh local ingredients.</p>
+            </div>
+            <div class="absolute right-[-30px] bottom-[-40px] opacity-10 pointer-events-none text-white text-[200px]">
+                <i class="fa-solid fa-utensils"></i>
+            </div>
+        </div>
+
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold tracking-tight text-white mb-1">Explore Our Extended Grand Menu</h2>
+            <p class="text-slate-400 text-sm">Over 40 hand-picked traditional Khmer royal dishes, modern stir-fries, soups, exotic grill items, and authentic desserts</p>
+        </div>
+
+        <!-- Sleek Category Filter Bar -->
+        <div class="flex gap-3 overflow-x-auto hide-scrollbar pb-4 mb-8">
+            <button class="category-pill active whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 border border-emerald-400/30" onclick="filterMenu('All', this)">🌟 All Selections (42)</button>
+            <button class="category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50" onclick="filterMenu('Khmer Traditional', this)">👑 Khmer Traditional</button>
+            <button class="category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50" onclick="filterMenu('Mains', this)">🍲 Mains & Stir Fry</button>
+            <button class="category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50" onclick="filterMenu('Soups', this)">🥣 Traditional Soups</button>
+            <button class="category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50" onclick="filterMenu('Noodles', this)">🍜 Noodles & Rice</button>
+            <button class="category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50" onclick="filterMenu('Grill & BBQ', this)">🔥 Khmer BBQ & Grill</button>
+            <button class="category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50" onclick="filterMenu('Desserts & Drinks', this)">🍹 Desserts & Drinks</button>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="menuGrid"></div>
+    </div>
+
+    <!-- ORDER PAGE VIEW -->
+    <div id="orderPage" class="page-view hidden max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        <button class="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-emerald-400 mb-6 transition-colors" onclick="goToHomePage()">
+            <i class="fa-solid fa-arrow-left"></i> Back to Menu
+        </button>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Details Column -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
+                    <div class="w-full h-72 sm:h-96 relative overflow-hidden bg-slate-800">
+                        <img id="orderImg" src="" alt="Product" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                    </div>
+                    <div class="p-6 sm:p-8">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                            <h1 id="orderName" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Product Name</h1>
+                            <span id="headerPrice" class="text-2xl font-extrabold text-emerald-400">$0.00</span>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-slate-400 mb-6 pb-6 border-b border-slate-800">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-store text-emerald-400"></i> KhmerKitchen Authentic</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-amber-400"></i> 20-30 mins</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-star text-amber-400"></i> <span id="ratingDisplay">4.9</span> (<span id="reviewTotalDisplay">500+</span>)</span>
+                        </div>
+                        <p id="orderDesc" class="text-slate-300 text-sm sm:text-base leading-relaxed mb-8">Description...</p>
+
+                        <!-- Size Options -->
+                        <div class="border-t border-slate-800 pt-6 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-base text-white">Portion Size & Options</span>
+                                <span class="text-[10px] font-extrabold uppercase bg-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-md border border-emerald-500/30">Required</span>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="flex justify-between items-center p-4 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 cursor-pointer transition-all">
+                                    <span class="flex items-center gap-3 text-sm font-medium"><input type="radio" name="sizeOption" checked onchange="updateTotalPrice()" class="accent-emerald-500"> Regular Portion</span>
+                                    <span class="text-sm font-bold text-slate-400">Included</span>
+                                </label>
+                                <label class="flex justify-between items-center p-4 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 cursor-pointer transition-all">
+                                    <span class="flex items-center gap-3 text-sm font-medium"><input type="radio" name="sizeOption" onchange="updateTotalPrice()" class="accent-emerald-500"> Large Family Size (Extra Meat & Herbs)</span>
+                                    <span class="text-sm font-bold text-emerald-400">+$2.00</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Add-ons -->
+                        <div class="border-t border-slate-800 pt-6 mb-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="font-bold text-base text-white">Extra Traditional Sides & Add-ons</span>
+                                <span class="text-[10px] font-extrabold uppercase bg-slate-800 text-slate-400 px-2.5 py-1 rounded-md border border-slate-700">Optional</span>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="flex justify-between items-center p-4 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 cursor-pointer transition-all">
+                                    <span class="flex items-center gap-3 text-sm font-medium"><input type="checkbox" class="addon-checkbox accent-emerald-500" value="1.00" onchange="updateTotalPrice()"> Extra Steamed Jasmine Rice</span>
+                                    <span class="text-sm font-bold text-emerald-400">+$1.00</span>
+                                </label>
+                                <label class="flex justify-between items-center p-4 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-emerald-500/50 cursor-pointer transition-all">
+                                    <span class="flex items-center gap-3 text-sm font-medium"><input type="checkbox" class="addon-checkbox accent-emerald-500" value="1.50" onchange="updateTotalPrice()"> House Special Prahok Krahorn Dip</span>
+                                    <span class="text-sm font-bold text-emerald-400">+$1.50</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Special Instructions -->
+                        <div class="border-t border-slate-800 pt-6">
+                            <label class="block font-bold text-base text-white mb-3">Special Instructions</label>
+                            <textarea id="specialNotes" rows="3" class="w-full bg-slate-900/80 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 transition-colors" placeholder="E.g. Less spicy, extra lemongrass flavor, separate the sauce, etc..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviews Box -->
+                <div class="glass-card rounded-2xl p-6 sm:p-8 border border-slate-800">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="font-bold text-base text-white">Customer Reviews & Ratings</span>
+                        <span class="text-xs text-slate-400"><span id="ratingSubDisplay">4.9</span> out of 5</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-xl bg-slate-900/50 border border-slate-800">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-sm text-white">Vibol K.</span>
+                                <div class="text-amber-400 text-xs flex gap-1"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-300">Unbelievable authentic taste! The aroma of kroeung and fresh herbs brought back wonderful memories. Highly recommended!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Live Summary Card -->
+            <div>
+                <div class="glass-card rounded-2xl p-6 border border-slate-800 sticky top-24 shadow-xl">
+                    <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-800">
+                        <span class="font-bold text-lg text-white">Your Order Summary</span>
+                        <i class="fa-solid fa-receipt text-emerald-400 text-lg"></i>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-6">
+                        <span id="receiptItemName" class="font-bold text-sm text-slate-200">Product Name</span>
+                        <div class="flex items-center bg-slate-900 border border-slate-800 rounded-lg overflow-hidden">
+                            <button onclick="updatePageQuantity(-1)" class="w-8 h-8 flex items-center justify-center hover:bg-slate-800 text-white font-bold transition-colors">-</button>
+                            <span id="pageQuantityVal" class="w-8 text-center text-xs font-bold text-white">1</span>
+                            <button onclick="updatePageQuantity(1)" class="w-8 h-8 flex items-center justify-center hover:bg-slate-800 text-white font-bold transition-colors">+</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 mb-6 pb-6 border-b border-slate-800 text-xs text-slate-400">
+                        <div class="flex justify-between"><span>Discount Applied</span><span class="text-emerald-400 font-semibold">-20% OFF TODAY</span></div>
+                        <div class="flex justify-between"><span>Base Item Price</span><span id="basePriceDisplay" class="text-slate-200 font-medium">$0.00</span></div>
+                        <div class="flex justify-between"><span>Express Delivery Fee</span><span class="text-slate-200 font-medium">$1.50</span></div>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-8">
+                        <span class="font-extrabold text-base text-white">Total Amount</span>
+                        <span id="orderTotalPrice" class="text-2xl font-black text-emerald-400">$0.00</span>
+                    </div>
+
+                    <button onclick="goToCheckoutPage()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-teal-600 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-credit-card"></i> Proceed to Secure Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHECKOUT PAGE VIEW -->
+    <div id="checkoutPage" class="page-view hidden max-w-xl mx-auto px-4 sm:px-6 py-12">
+        <button class="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-emerald-400 mb-6 transition-colors" onclick="goToOrderPageFromCheckout()">
+            <i class="fa-solid fa-arrow-left"></i> Back to Order Details
+        </button>
+
+        <div class="glass-card rounded-3xl p-8 border border-slate-800 shadow-2xl">
+            <h2 class="text-2xl font-black text-center text-white mb-2">Select Payment Method</h2>
+            <p class="text-xs text-slate-400 text-center mb-8">Choose your preferred way to checkout safely via KhmerKitchen Gateway</p>
+
+            <!-- Toggle Buttons -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button id="tabKhqr" onclick="switchPaymentMethod('khqr')" class="py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                    <i class="fa-solid fa-qrcode"></i> ACLEDA KHQR
+                </button>
+                <button id="tabCard" onclick="switchPaymentMethod('card')" class="py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-slate-900 text-slate-400 border border-slate-800">
+                    <i class="fa-solid fa-credit-card"></i> Credit Card
+                </button>
+            </div>
+
+            <div class="text-center font-bold text-sm text-slate-300 mb-6">
+                Total Due: <span id="checkoutFinalPrice" class="text-2xl font-black text-emerald-400 ml-1">$0.00</span>
+            </div>
+
+            <!-- KHQR Panel -->
+            <div id="panelKhqr" class="payment-panel">
+                <div class="bg-slate-900/80 border-2 border-dashed border-emerald-500/30 rounded-2xl p-6 text-center mb-6">
+                    <div class="text-xs font-bold text-slate-300 mb-4 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-qrcode text-emerald-400"></i> ACLEDA / KHQR Merchant Gateway
+                    </div>
+                    <img id="dynamicQRImage" src="" alt="QR Code" class="w-48 h-48 mx-auto bg-white p-2 rounded-xl shadow-lg">
+                </div>
+                <div class="space-y-3">
+                    <a id="acledaDirectLink" href="#" target="_blank" class="block w-full text-center bg-emerald-600 text-white font-bold py-3.5 px-4 rounded-xl text-sm shadow-lg shadow-emerald-600/20 hover:bg-emerald-500 transition-all">
+                        Pay via ACLEDA Gateway <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>
+                    </a>
+                    <button onclick="copyAcledaLink()" class="w-full bg-slate-900 text-slate-300 font-semibold py-3 px-4 rounded-xl text-xs border border-slate-800 hover:bg-slate-800 transition-all">
+                        <i class="fa-solid fa-copy mr-1.5"></i> Copy Payment Link
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card Panel -->
+            <div id="panelCard" class="payment-panel hidden space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-2">Cardholder Name</label>
+                    <input type="text" placeholder="Sokha Chan" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-2">Card Number</label>
+                    <input type="text" placeholder="4111 2222 3333 4444" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-2">Expiry Date</label>
+                        <input type="text" placeholder="MM/YY" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-2">CVV</label>
+                        <input type="password" placeholder="123" maxlength="4" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+                    </div>
+                </div>
+                <button onclick="simulateCardPayment()" class="w-full mt-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-bold py-4 rounded-xl text-sm shadow-lg shadow-emerald-500/25 hover:from-emerald-600 hover:to-teal-600 transition-all">
+                    Complete Secure Payment
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Engine -->
+    <script>
+        const menuItems = [
+            // Khmer Traditional (7 items)
+            {
+                id: 1,
+                name: "Royal Fish Amok",
+                category: "Khmer Traditional",
+                price: "$6.50",
+                oldPrice: "$8.25",
+                img: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=600&q=80",
+                desc: "Cambodia's crown jewel dish. Fresh river fish fillet wrapped in banana leaves, slow-steamed in rich coconut milk and kroeung spice paste.",
+                rating: "5.0",
+                reviews: "1,240+",
+                badge: "👑 Top Recommended"
+            },
+            {
+                id: 2,
+                name: "Authentic Beef Lok Lak",
+                category: "Khmer Traditional",
+                price: "$6.00",
+                oldPrice: "$7.50",
+                img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80",
+                desc: "Tender wok-tossed beef cubes in savory oyster-soy reduction, served with crisp lettuce, sliced tomatoes, and pepper-lime dipping sauce.",
+                rating: "4.9",
+                reviews: "980+",
+                badge: "🔥 Most Popular"
+            },
+            {
+                id: 3,
+                name: "Traditional Nom Banh Chok",
+                category: "Khmer Traditional",
+                price: "$5.00",
+                oldPrice: "$6.25",
+                img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+                desc: "Hand-made fermented rice noodles served with a delicate green fish gravy infused with lemongrass, galangal, and fresh raw herbs.",
+                rating: "4.9",
+                reviews: "850+",
+                badge: "🌟 Chef Pick"
+            },
+            {
+                id: 4,
+                name: "Khmer Samlor Korkor",
+                category: "Khmer Traditional",
+                price: "$5.50",
+                oldPrice: "$7.00",
+                img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+                desc: "Traditional hearty Cambodian soup loaded with seasonal vegetables, green papaya, roasted rice powder, and tender catfish chunks.",
+                rating: "4.8",
+                reviews: "610+",
+                badge: "👑 Traditional"
+            },
+            {
+                id: 5,
+                name: "Char Kroeung Sach Moan",
+                category: "Khmer Traditional",
+                price: "$5.75",
+                oldPrice: "$7.25",
+                img: "https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=600&q=80",
+                desc: "Stir-fried tender chicken breast tossed with intensely aromatic lemongrass kroeung paste, garlic, chili, and fresh basil leaves.",
+                rating: "4.8",
+                reviews: "530+",
+                badge: "👑 Traditional"
+            },
+            {
+                id: 6,
+                name: "Bai Sach Chrouk (Pork & Rice)",
+                category: "Khmer Traditional",
+                price: "$4.75",
+                oldPrice: "$6.00",
+                img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80",
+                desc: "Thinly sliced palm-sugar marinated grilled pork served over steaming broken rice with crunchy pickled daikon and clear soup.",
+                rating: "4.9",
+                reviews: "910+",
+                badge: "👑 Traditional"
+            },
+            {
+                id: 7,
+                name: "Bok Lhong (Papaya Salad)",
+                category: "Khmer Traditional",
+                price: "$4.25",
+                oldPrice: "$5.50",
+                img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+                desc: "Shredded crisp green papaya pounded with garlic, bird's eye chilies, peanuts, dried shrimp, lime juice, and fish sauce dressing.",
+                rating: "4.7",
+                reviews: "480+",
+                badge: "👑 Traditional"
+            },
+
+            // Mains & Stir Fry (7 items)
+            {
+                id: 8,
+                name: "Garlic Butter Prawns",
+                category: "Mains",
+                price: "$8.50",
+                oldPrice: "$10.50",
+                img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=600&q=80",
+                desc: "Juicy jumbo river prawns pan-seared with rich garlic butter, fresh parsley, and a hint of crushed Kampot black pepper.",
+                rating: "4.8",
+                reviews: "320+",
+                badge: "🔥 Hot Deal"
+            },
+            {
+                id: 9,
+                name: "Sweet & Sour Crispy Fish",
+                category: "Mains",
+                price: "$7.50",
+                oldPrice: "$9.25",
+                img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+                desc: "Whole crispy golden fish fillet topped with a vibrant sweet and sour tomato, pineapple, cucumber, and bell pepper sauce.",
+                rating: "4.7",
+                reviews: "290+",
+                badge: "🔥 Special"
+            },
+            {
+                id: 10,
+                name: "Spicy Basil Beef Stir-Fry",
+                category: "Mains",
+                price: "$6.80",
+                oldPrice: "$8.50",
+                img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                desc: "Tender sliced beef wok-fried with garlic, fresh chili peppers, snake beans, and abundant holy basil leaves.",
+                rating: "4.8",
+                reviews: "410+",
+                badge: "🔥 Popular"
+            },
+            {
+                id: 11,
+                name: "Cashew Chicken Stir-Fry",
+                category: "Mains",
+                price: "$6.25",
+                oldPrice: "$7.80",
+                img: "https://images.unsplash.com/photo-1525755662778-989d0524087e?auto=format&fit=crop&w=600&q=80",
+                desc: "Wok-seared diced chicken breast tossed with roasted cashew nuts, dried chilies, bell peppers, and scallions.",
+                rating: "4.7",
+                reviews: "350+",
+                badge: "🔥 Savory"
+            },
+            {
+                id: 12,
+                name: "Ginger Duck and Mushroom Claypot",
+                category: "Mains",
+                price: "$7.90",
+                oldPrice: "$9.50",
+                img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                desc: "Tender duck braised slowly in a claypot with julienned fresh ginger, shiitake mushrooms, and Shaoxing wine reduction.",
+                rating: "4.9",
+                reviews: "270+",
+                badge: "🌟 Chef Special"
+            },
+            {
+                id: 13,
+                name: "Crispy Pork Belly with Chinese Kale",
+                category: "Mains",
+                price: "$7.20",
+                oldPrice: "$8.90",
+                img: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=600&q=80",
+                desc: "Crunchy crackling pork belly stir-fried with fresh Chinese broccoli (gai lan), garlic, and savory oyster sauce.",
+                rating: "4.9",
+                reviews: "510+",
+                badge: "🔥 Must Try"
+            },
+            {
+                id: 14,
+                name: "Tofu & Eggplant Claypot",
+                category: "Mains",
+                price: "$5.90",
+                oldPrice: "$7.20",
+                img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+                desc: "Silken fried tofu cubes and tender Chinese eggplant braised in a savory garlic soy sauce with fresh herbs.",
+                rating: "4.6",
+                reviews: "190+",
+                badge: "🌱 Vegetarian Friendly"
+            },
+
+            // Traditional Soups (7 items)
+            {
+                id: 15,
+                name: "Samlor Machu Prohut (Tamarind Soup)",
+                category: "Soups",
+                price: "$5.75",
+                oldPrice: "$7.00",
+                img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+                desc: "Refreshing and tangy sour soup made with fresh beef, tamarind paste, lemongrass, kaffir lime leaves, and Asian basil.",
+                rating: "4.9",
+                reviews: "340+",
+                badge: "⭐ Comfort Soup"
+            },
+            {
+                id: 16,
+                name: "Chicken Herbal Bone Broth Soup",
+                category: "Soups",
+                price: "$5.25",
+                oldPrice: "$6.50",
+                img: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=600&q=80",
+                desc: "Slow-simmered chicken soup with winter melon, ginger, scallions, and traditional Chinese tonic herbs.",
+                rating: "4.6",
+                reviews: "210+",
+                badge: "⭐ Healthy"
+            },
+            {
+                id: 17,
+                name: "Samlor Mchu Kroeung Sach Ko",
+                category: "Soups",
+                price: "$6.20",
+                oldPrice: "$7.80",
+                img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+                desc: "Zesty and spicy lemongrass sour soup with tender beef shanks, morning glory, and fresh holy basil.",
+                rating: "4.8",
+                reviews: "380+",
+                badge: "👑 Traditional"
+            },
+            {
+                id: 18,
+                name: "Clear Glass Noodle & Minced Pork Soup",
+                category: "Soups",
+                price: "$4.90",
+                oldPrice: "$6.00",
+                img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+                desc: "Light and soothing clear broth with mung bean glass noodles, seasoned minced pork meatballs, and crisp scallions.",
+                rating: "4.7",
+                reviews: "220+",
+                badge: "⭐ Light Meal"
+            },
+            {
+                id: 19,
+                name: "Fish Head Sour Soup (Samlor Machu Trey)",
+                category: "Soups",
+                price: "$6.50",
+                oldPrice: "$8.00",
+                img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+                desc: "Authentic river fish soup flavored with fresh lime juice, green papaya slices, rice paddy herbs, and roasted chili.",
+                rating: "4.8",
+                reviews: "290+",
+                badge: "👑 Authentic"
+            },
+            {
+                id: 20,
+                name: "Lotus Root & Pork Rib Broth",
+                category: "Soups",
+                price: "$6.40",
+                oldPrice: "$8.00",
+                img: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=600&q=80",
+                desc: "Tender pork ribs simmered for hours with crunchy sliced lotus root and red jujube dates for a nourishing flavor.",
+                rating: "4.9",
+                reviews: "310+",
+                badge: "⭐ Nourishing"
+            },
+            {
+                id: 21,
+                name: "Lemongrass Beef Shank Hot Pot Soup",
+                category: "Soups",
+                price: "$7.50",
+                oldPrice: "$9.20",
+                img: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80",
+                desc: "Rich aromatic beef broth packed with lemongrass stalks, galangal, chili oil, and tender chunks of beef shank.",
+                rating: "4.9",
+                reviews: "450+",
+                badge: "🔥 Hot Pick"
+            },
+
+            // Noodles & Rice (7 items)
+            {
+                id: 22,
+                name: "Khmer Style Fried Rice",
+                category: "Noodles",
+                price: "$5.00",
+                oldPrice: "$6.25",
+                img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=600&q=80",
+                desc: "Jasmine rice fried with eggs, Chinese sausage, scallions, garlic, and savory house soy sauce blend.",
+                rating: "4.7",
+                reviews: "560+",
+                badge: "🌟 Best Seller"
+            },
+            {
+                id: 23,
+                name: "Wok-Fried Rice Noodles",
+                category: "Noodles",
+                price: "$5.50",
+                oldPrice: "$6.80",
+                img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80",
+                desc: "Flat rice noodles wok-charred with tender chicken slices, Chinese kale, bean sprouts, and sweet dark soy glaze.",
+                rating: "4.8",
+                reviews: "430+",
+                badge: "🌟 Popular"
+            },
+            {
+                id: 24,
+                name: "Cambodian Seafood Fried Rice",
+                category: "Noodles",
+                price: "$7.00",
+                oldPrice: "$8.50",
+                img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80",
+                desc: "Fried rice tossed with fresh shrimp, squid chunks, crab meat, garlic, and spring onions.",
+                rating: "4.9",
+                reviews: "500+",
+                badge: "🌊 Seafood"
+            },
+            {
+                id: 25,
+                name: "Dry Egg Noodles with Roasted Pork",
+                category: "Noodles",
+                price: "$5.25",
+                oldPrice: "$6.50",
+                img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+                desc: "Springy egg noodles tossed in special sesame oil and sweet soy sauce, topped with slices of char siu pork and scallions.",
+                rating: "4.7",
+                reviews: "320+",
+                badge: "🍜 Noodle Special"
+            },
+            {
+                id: 26,
+                name: "Pineapple Fried Rice with Shrimp",
+                category: "Noodles",
+                price: "$7.25",
+                oldPrice: "$8.90",
+                img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=600&q=80",
+                desc: "Fragrant yellow curry fried rice with fresh pineapple chunks, jumbo shrimp, raisins, and cashew nuts served in a pineapple shell.",
+                rating: "4.9",
+                reviews: "410+",
+                badge: "🍍 Tropical"
+            },
+            {
+                id: 27,
+                name: "Beef Pad See Ew",
+                category: "Noodles",
+                price: "$6.00",
+                oldPrice: "$7.50",
+                img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?auto=format&fit=crop&w=600&q=80",
+                desc: "Wide rice noodles stir-fried with tender beef strips, egg, and Chinese broccoli in a caramelized sweet soy sauce.",
+                rating: "4.8",
+                reviews: "380+",
+                badge: "🔥 Flavorful"
+            },
+            {
+                id: 28,
+                name: "Garlic Fried Rice with Fried Egg",
+                category: "Noodles",
+                price: "$4.50",
+                oldPrice: "$5.50",
+                img: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=600&q=80",
+                desc: "Simple yet flavorful jasmine rice wok-fried with crispy roasted garlic flakes, topped with a sunny-side up fried egg.",
+                rating: "4.6",
+                reviews: "250+",
+                badge: "⭐ Classic Side"
+            },
+
+            // Grill & BBQ (7 items)
+            {
+                id: 29,
+                name: "Charcoal Grilled Lemongrass Chicken",
+                category: "Grill & BBQ",
+                price: "$6.80",
+                oldPrice: "$8.50",
+                img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80",
+                desc: "Juicy half chicken marinated overnight in lemongrass, garlic, turmeric, and honey, flame-grilled over open coals.",
+                rating: "4.9",
+                reviews: "620+",
+                badge: "🔥 BBQ Master"
+            },
+            {
+                id: 30,
+                name: "Angkor Grilled Pork Skewers (Sach Chrouk Ang)",
+                category: "Grill & BBQ",
+                price: "$5.00",
+                oldPrice: "$6.25",
+                img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                desc: "Tender skewered pork belly glazed with coconut milk and palm sugar, grilled to smoky perfection with pickled cucumber.",
+                rating: "4.9",
+                reviews: "730+",
+                badge: "🔥 Street Favorite"
+            },
+            {
+                id: 31,
+                name: "Kampot Pepper Grilled Beef Ribs",
+                category: "Grill & BBQ",
+                price: "$9.50",
+                oldPrice: "$12.00",
+                img: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80",
+                desc: "Short beef ribs rubbed with crushed green Kampot peppercorns, garlic, and honey, slow-grilled over charcoal embers.",
+                rating: "5.0",
+                reviews: "490+",
+                badge: "👑 Premium BBQ"
+            },
+            {
+                id: 32,
+                name: "Grilled River Fish with Banana Leaf Wrap",
+                category: "Grill & BBQ",
+                price: "$7.80",
+                oldPrice: "$9.50",
+                img: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80",
+                desc: "Fresh whole river fish stuffed with herbs and kroeung, wrapped tightly in banana leaves and slow-roasted on the grill.",
+                rating: "4.8",
+                reviews: "310+",
+                badge: "🔥 Traditional Grill"
+            },
+            {
+                id: 33,
+                name: "Honey Glazed Grilled Quail",
+                category: "Grill & BBQ",
+                price: "$6.50",
+                oldPrice: "$8.00",
+                img: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80",
+                desc: "Delicate whole quails marinated in five-spice and honey, roasted over hot coals until the skin is crisp and golden.",
+                rating: "4.7",
+                reviews: "210+",
+                badge: "🔥 Exotic BBQ"
+            },
+            {
+                id: 34,
+                name: "Spicy Grilled Squid with Lime Chili Dip",
+                category: "Grill & BBQ",
+                price: "$8.00",
+                oldPrice: "$10.00",
+                img: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=600&q=80",
+                desc: "Whole tender squid grilled with garlic chili glaze, served with zesty green lime and fish sauce dipping sauce.",
+                rating: "4.9",
+                reviews: "360+",
+                badge: "🌊 Seafood BBQ"
+            },
+            {
+                id: 35,
+                name: "Grilled Eggplant with Minced Pork & Scallion Oil",
+                category: "Grill & BBQ",
+                price: "$4.80",
+                oldPrice: "$6.00",
+                img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+                desc: "Whole Asian eggplant flame-roasted until smoky and tender, topped with savory minced pork and aromatic scallion oil.",
+                rating: "4.8",
+                reviews: "280+",
+                badge: "🔥 Smoke Infused"
+            },
+
+            // Desserts & Drinks (7 items)
+            {
+                id: 36,
+                name: "Nom Ansorm & Iced Teuk Ampov",
+                category: "Desserts & Drinks",
+                price: "$3.75",
+                oldPrice: "$4.75",
+                img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80",
+                desc: "Sweet banana sticky rice dessert paired with ice-cold fresh pressed sugarcane juice with kumquat twist.",
+                rating: "4.9",
+                reviews: "290+",
+                badge: "🍹 Sweet Combo"
+            },
+            {
+                id: 37,
+                name: "Kampot Coconut Sticky Rice with Mango",
+                category: "Desserts & Drinks",
+                price: "$4.00",
+                oldPrice: "$5.00",
+                img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
+                desc: "Warm sticky rice drenched in rich salted coconut cream, served alongside ripe sweet mango slices and roasted sesame seeds.",
+                rating: "5.0",
+                reviews: "670+",
+                badge: "👑 Must Try"
+            },
+            {
+                id: 38,
+                name: "Traditional Iced Cambodian Coffee",
+                category: "Desserts & Drinks",
+                price: "$3.00",
+                oldPrice: "$3.80",
+                img: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=600&q=80",
+                desc: "Strong dark-roasted robusta coffee brewed slow and layered over thick sweetened condensed milk with crushed ice.",
+                rating: "4.9",
+                reviews: "820+",
+                badge: "☕ Daily Favorite"
+            },
+            {
+                id: 39,
+                name: "Chek Keng (Banana in Coconut Milk)",
+                category: "Desserts & Drinks",
+                price: "$3.50",
+                oldPrice: "$4.50",
+                img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=600&q=80",
+                desc: "Ripe bananas gently simmered in sweet coconut milk infused with pandan leaves and a sprinkle of roasted sesame seeds.",
+                rating: "4.8",
+                reviews: "240+",
+                badge: "🍨 Sweet Dessert"
+            },
+            {
+                id: 40,
+                name: "Fresh Young Coconut Water",
+                category: "Desserts & Drinks",
+                price: "$2.75",
+                oldPrice: "$3.50",
+                img: "https://images.unsplash.com/photo-1525385133512-2f3bdd039a54?auto=format&fit=crop&w=600&q=80",
+                desc: "Chilled natural young green coconut water served straight in the shell with tender sweet coconut meat.",
+                rating: "4.9",
+                reviews: "510+",
+                badge: "🥥 Refreshing"
+            },
+            {
+                id: 41,
+                name: "Pumpkin Custard (Sankya Lapov)",
+                category: "Desserts & Drinks",
+                price: "$4.20",
+                oldPrice: "$5.20",
+                img: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80",
+                desc: "Traditional rich egg and coconut custard steamed inside a whole sweet miniature pumpkin, sliced into wedges.",
+                rating: "4.9",
+                reviews: "320+",
+                badge: "👑 Royal Dessert"
+            },
+            {
+                id: 42,
+                name: "Iced Jasmine Pandan Tea",
+                category: "Desserts & Drinks",
+                price: "$2.50",
+                oldPrice: "$3.20",
+                img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80",
+                desc: "Fragrant iced green tea infused with natural jasmine flowers and fresh aromatic pandan leaf extract.",
+                rating: "4.7",
+                reviews: "390+",
+                badge: "🍵 Refreshing"
+            }
+        ];
+
+        let baseUnitPrice = 0;
+        let pageQuantity = 1;
+        const acledaPaymentUrl = "https://acledabank.com.kh/acleda?payment_data=secure_token_khqr_mock";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderMenuGrid(menuItems);
+        });
+
+        function renderMenuGrid(items) {
+            const grid = document.getElementById('menuGrid');
+            if (items.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center text-slate-500 py-12">No dishes available.</p>`;
+                return;
+            }
+            grid.innerHTML = items.map(item => `
+                <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 hover:border-emerald-500/40 hover:-translate-y-1.5 transition-all duration-300 cursor-pointer flex flex-col group shadow-lg shadow-black/20" onclick="goToOrderPage('${item.name}', '${item.price}', '${item.img}', '${item.desc}', '${item.rating}', '${item.reviews}')">
+                    <div class="relative w-full h-48 overflow-hidden bg-slate-800">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <span class="absolute top-3 left-3 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-md bg-emerald-500 text-slate-950 shadow-md">${item.badge}</span>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow justify-between">
+                        <div>
+                            <h3 class="font-bold text-base text-white mb-1.5 group-hover:text-emerald-400 transition-colors">${item.name}</h3>
+                            <p class="text-xs text-slate-400 line-clamp-2 mb-4">${item.desc}</p>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-slate-800/80">
+                            <div>
+                                <span class="text-base font-extrabold text-emerald-400">${item.price}</span>
+                                <span class="text-xs text-slate-500 line-through ml-1.5">${item.oldPrice}</span>
+                            </div>
+                            <button onclick="event.stopPropagation(); goToOrderPage('${item.name}', '${item.price}', '${item.img}', '${item.desc}', '${item.rating}', '${item.reviews}')" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-emerald-500 hover:text-white transition-all">Order</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterMenu(category, btnElement) {
+            document.querySelectorAll('.category-pill').forEach(pill => {
+                pill.className = "category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-slate-800/80 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50";
+            });
+            btnElement.className = "category-pill whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold transition-all bg-emerald-500 text-white shadow-lg shadow-emerald-500/25 border border-emerald-400/30";
+
+            if (category === 'All') {
+                renderMenuGrid(menuItems);
+            } else {
+                renderMenuGrid(menuItems.filter(i => i.category === category));
+            }
+        }
+
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = "glass-card bg-slate-900/90 text-slate-200 px-5 py-3.5 rounded-2xl text-xs font-semibold shadow-2xl border border-emerald-500/30 flex items-center gap-3 animate-fade-in";
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function goToOrderPage(name, price, img, desc, rating, reviews) {
+            document.getElementById('orderName').innerText = name;
+            document.getElementById('receiptItemName').innerText = name;
+            document.getElementById('orderImg').src = img;
+            document.getElementById('orderDesc').innerText = desc;
+            document.getElementById('ratingDisplay').innerText = rating;
+            document.getElementById('ratingSubDisplay').innerText = rating;
+            document.getElementById('reviewTotalDisplay').innerText = reviews;
+
+            baseUnitPrice = parseFloat(price.replace('$', ''));
+            pageQuantity = 1;
+            document.getElementById('pageQuantityVal').innerText = pageQuantity;
+            document.getElementById('specialNotes').value = '';
+            document.querySelectorAll('input[name="sizeOption"]')[0].checked = true;
+            document.querySelectorAll('.addon-checkbox').forEach(cb => cb.checked = false);
+
+            updateTotalPrice();
+            switchView('orderPage');
+        }
+
+        function goToHomePage() { switchView('homePage'); }
+        function goToOrderPageFromCheckout() { switchView('orderPage'); }
+
+        function updatePageQuantity(change) {
+            pageQuantity += change;
+            if (pageQuantity < 1) pageQuantity = 1;
+            document.getElementById('pageQuantityVal').innerText = pageQuantity;
+            updateTotalPrice();
+        }
+
+        function updateTotalPrice() {
+            let price = baseUnitPrice;
+            const largeRadio = document.querySelectorAll('input[name="sizeOption"]')[1];
+            if (largeRadio && largeRadio.checked) price += 2.00;
+            document.querySelectorAll('.addon-checkbox').forEach(cb => {
+                if (cb.checked) price += parseFloat(cb.value);
+            });
+
+            document.getElementById('basePriceDisplay').innerText = '$' + price.toFixed(2);
+            document.getElementById('headerPrice').innerText = '$' + price.toFixed(2);
+            document.getElementById('orderTotalPrice').innerText = '$' + ((price * pageQuantity) + 1.50).toFixed(2);
+        }
+
+        function goToCheckoutPage() {
+            document.getElementById('checkoutFinalPrice').innerText = document.getElementById('orderTotalPrice').innerText;
+            document.getElementById('dynamicQRImage').src = "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=" + encodeURIComponent(acledaPaymentUrl);
+            document.getElementById('acledaDirectLink').href = acledaPaymentUrl;
+            switchPaymentMethod('khqr');
+            switchView('checkoutPage');
+            showToast("Proceeding to secure checkout");
+        }
+
+        function switchPaymentMethod(method) {
+            if (method === 'khqr') {
+                document.getElementById('tabKhqr').className = "py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+                document.getElementById('tabCard').className = "py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-slate-900 text-slate-400 border border-slate-800";
+                document.getElementById('panelKhqr').classList.remove('hidden');
+                document.getElementById('panelCard').classList.add('hidden');
+            } else {
+                document.getElementById('tabCard').className = "py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+                document.getElementById('tabKhqr').className = "py-3 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all bg-slate-900 text-slate-400 border border-slate-800";
+                document.getElementById('panelCard').classList.remove('hidden');
+                document.getElementById('panelKhqr').classList.add('hidden');
+            }
+        }
+
+        function copyAcledaLink() {
+            navigator.clipboard.writeText(acledaPaymentUrl).then(() => showToast("Payment link copied!"));
+        }
+
+        function simulateCardPayment() {
+            showToast("Payment processed successfully!");
+            setTimeout(() => goToHomePage(), 1800);
+        }
+
+        function switchView(viewId) {
+            document.querySelectorAll('.page-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById(viewId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
